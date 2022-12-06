@@ -1,4 +1,27 @@
 {
-  "components": {},
-  "dependencies": {}
+  "components": {
+    "seeds": {
+      "PetriNetProjectSeed": "src/seeds/PetriNetProjectSeed"
+    }, 
+    "visualizers": {
+      "SimViz": {
+        "src": "visualizers/panels/SimViz/SimVizPanel",
+        "title": "SimViz",
+        "panel": "src/visualizers/panels/SimViz",
+        "secondary": false,
+        "widget": "src/visualizers/widgets/SimViz"
+      }
+    },
+    "plugins": {
+      "PetriNetClassifier": {
+        "src": "src/plugins/PetriNetClassifier",
+        "test": "test/plugins/PetriNetClassifier"
+      }
+    }
+  },
+  "dependencies": {
+    "decorators": {},
+    "visualizers": {},
+    "plugins": {}
+  }
 }
