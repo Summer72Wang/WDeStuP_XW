@@ -22,7 +22,7 @@ config.requirejsPaths = {
 };
 
 config.plugin.basePaths.push(__dirname + "/../src/plugins");
-config.seedProjects.basePaths.push("./src/Seeds");
+config.seedProjects.basePaths.push("src/Seeds");
 
 config.mongo.uri = 'mongodb://127.0.0.1:27017/wdestup';
 validateConfig(config);
