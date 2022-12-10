@@ -151,6 +151,110 @@ define([
         }
     };
 
+      /* * * * * * * * Machine manipulation functions * * * * * * * */
+      /* * * * * * * * reference: https://github.com/austinjhunt/petrinet-webgme-designstudio/blob/main/petri-net/src/visualizers/panels/SimViz/SimVizControl.js * * * * * * * */
+    VizXWControl.prototype._initPetriNet = function () {
+        const rawMETA = this._client.getAllMetaNodes();
+        const META = {};
+        const self = this;
+        rawMETA.forEach((node) => {
+            META[node.getAttribute("name")] = node.getId(); //we just need the id...
+        });
+        const petriNetNode = this._client.getNode(this._currentNodeId);
+        const elementIds = petriNetNode.getChildrenIds();
+        let placeIds = getPlacesIds(this._client, elementIds);
+        let transitionIds = getTransitionsIds(this._client, elementIds);
+        let arcsTransitionToPlace = getArcs(
+            self._client,
+            "ArcTransitionToPlace",
+            elementIds
+        );
+        let arcsPlaceToTransition = getArcs(
+            self._client,
+            "ArcPlaceToTransition",
+            elementIds
+        );
+        let inputMatrix = getInputMatrix(
+            placeIds,
+            transitionIds,
+            arcsTransitionToPlace
+        );
+        let startingPlaceId = getStartingPlaceId(inputMatrix);
+        let outputMatrix = getOutputMatrix(
+            placeIds,
+            transitionIds,
+            arcsPlaceToTransition
+        );
+        let petriNet = {
+            /* functions to pass logic to widget */
+            deadlockActive: _petriNetInDeadlock,
+            /* end functions */
+            startingPlace: startingPlaceId,
+            places: {},
+            transitions: {},
+            inputMatrix: inputMatrix,
+            outputMatrix: outputMatrix,
+            arcsPlaceToTransition: arcsPlaceToTransition,
+            arcsTransitionToPlace: arcsTransitionToPlace,
+        };
+        elementIds.forEach((elementId) => {
+            const node = self._client.getNode(elementId);
+            if (node.isTypeOf(META["Place"])) {
+                petriNet.places[elementId] = {
+                id: elementId,
+                name: node.getAttribute("name"),
+                currentMarking: parseInt(node.getAttribute("currentMarking")),
+                nextPlaceIds: getNextPlacesFromCurrentPlace(
+                    elementId,
+                    arcsPlaceToTransition,
+                    arcsTransitionToPlace
+                ),
+                outTransitions: getOutTransitionsFromPlace(elementId, outputMatrix),
+                inTransitions: getInTransitionsToPlace(elementId, inputMatrix),
+                outArcs: getOutArcsFromPlace(elementId, arcsPlaceToTransition),
+                position: node.getRegistry("position"),
+            };
+        } else if (node.isTypeOf(META["Transition"])) {
+            petriNet.transitions[elementId] = {
+                id: elementId,
+                name: node.getAttribute("name"),
+                outPlaces: getOutPlacesFromTransition(elementId, inputMatrix),
+                inPlaces: getInPlacesToTransition(elementId, outputMatrix),
+                outArcs: getOutArcsFromTransition(elementId, arcsTransitionToPlace),
+                position: node.getRegistry("position"),
+                };
+            }
+        });
+        petriNet.setFireableEvents = this.setFireableEvents;
+        self._widget.initMachine(petriNet);
+    };
+
+    VizXWControl.prototype.clearPetriNet = function () {
+        this._networkRootLoaded = false;
+        this._widget.destroyMachine();
+    };
+
+    VizXWControl.prototype.setFireableEvents = function (enabledTransitions) {
+        this._fireableEvents = enabledTransitions;
+        if (enabledTransitions && enabledTransitions.length >= 1) {
+            // fill dropdown button with options. only including enabled transitions
+            this.$btnEventSelector.clear();
+            enabledTransitions.forEach((transition) => {
+                this.$btnEventSelector.addButton({
+                text: `Fire enabled transition ${transition.name}`,
+                title: `Fire enabled transition ${transition.name}`,
+                data: { event: transition },
+                clickFn: (data) => {
+                    this._widget.fireEvent(data.event);
+                    },
+                });
+            });
+        } else if (enabledTransitions && enabledTransitions.length === 0) {
+            this._fireableEvents = null;
+            }
+        this._displayToolbarItems();
+    };
+
     /* * * * * * * * Visualizer life cycle callbacks * * * * * * * */
     VizXWControl.prototype.destroy = function () {
         this._detachClientEventListeners();
