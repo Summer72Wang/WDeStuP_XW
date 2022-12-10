@@ -1,1 +1,8 @@
-[]
+[
+    {
+        "id": "VizXW",
+        "title": "VizXW",
+        "panel": "panels/VizXW/VizXWPanel",
+        "DEBUG_ONLY": false
+      }
+]
