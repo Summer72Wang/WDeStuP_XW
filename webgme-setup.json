@@ -1,7 +1,7 @@
 {
   "components": {
     "seeds": {
-      "PetriNetProjectSeed": "src/seeds/PetriNetProjectSeed"
+      "PetriNetProjectSeed": "src/Seeds/seedPetriNet_XW"
     }, 
     "visualizers": {
       "SimViz": {
