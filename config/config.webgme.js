@@ -22,8 +22,8 @@ config.requirejsPaths = {
 };
 
 config.plugin.basePaths.push(__dirname + "/../src/plugins");
-config.seedProjects.basePaths.push("src/Seeds");
+config.seedProjects.basePaths.push("src/seeds");
 
-config.mongo.uri = 'mongodb://127.0.0.1:27017/wdestup';
+config.mongo.uri = 'mongodb://127.0.0.1:27017/petri_net';
 validateConfig(config);
 module.exports = config;

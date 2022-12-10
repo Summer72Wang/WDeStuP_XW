@@ -1,15 +1,15 @@
 {
   "components": {
     "seeds": {
-      "PetriNetProjectSeed": "src/Seeds/seedPetriNet_XW"
-    }, 
+      "PetriNetProjectSeed": "src/seeds/seedPetriNet_XW"
+    },
     "visualizers": {
-      "SimViz": {
-        "src": "visualizers/panels/SimViz/SimVizPanel",
-        "title": "SimViz",
-        "panel": "src/visualizers/panels/SimViz",
+      "VizXW": {
+        "src": "panels/VizXW/VizXWPanel",
+        "title": "VizXW",
+        "panel": "src/visualizers/panels/VizXW",
         "secondary": false,
-        "widget": "src/visualizers/widgets/SimViz"
+        "widget": "src/visualizers/widgets/VizXW"
       }
     },
     "plugins": {
@@ -20,7 +20,6 @@
     }
   },
   "dependencies": {
-    "decorators": {},
     "visualizers": {},
     "plugins": {}
   }

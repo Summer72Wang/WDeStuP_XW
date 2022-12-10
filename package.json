@@ -1,5 +1,5 @@
 {
-  "name": "petri-net",
+  "name": "wdestup",
   "scripts": {
     "start": "node app.js",
     "test": "node ./node_modules/mocha/bin/mocha --recursive test",
@@ -11,44 +11,18 @@
     "plugin": "node ./node_modules/webgme-engine/src/bin/run_plugin.js",
     "pluginHook": "node ./node_modules/webgme-engine/src/bin/plugin_hook.js",
     "users": "node ./node_modules/webgme-engine/src/bin/usermanager.js",
-    "clean_up": "node ./node_modules/webgme-engine/src/bin/clean_up.js"
+    "clean_up": "node ./node_modules/webgme-engine/src/bin/clean_up.js",
+    "webgme": "node ./node_modules/webgme-cli/bin/webgme"
   },
   "version": "1.0.0",
-  "peerDependencies": {
-    "webgme": "^2.23.0"
-  },
   "devDependencies": {
-    "mocha": "^5.2.0",
-    "webgme": "^2.23.0"
+    "mocha": "^5.2.0"
   },
-  "description": "First, install the petri-net following: - [NodeJS](https://nodejs.org/en/) (LTS recommended) - [MongoDB](https://www.mongodb.com/)",
-  "main": "app.js",
-  "directories": {
-    "test": "test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/austinjhunt/petrinet-designstudio.git"
-  },
-  "keywords": [
-    "petri",
-    "net",
-    "petrinet",
-    "design",
-    "studio",
-    "webgme",
-    "modeling",
-    "models",
-    "metamodeling"
-  ],
-  "author": "austinjhunt",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/austinjhunt/petrinet-designstudio/issues"
-  },
-  "homepage": "https://github.com/austinjhunt/petrinet-designstudio#readme",
   "dependencies": {
-    "jointjs": "^3.5.5",
-    "lodash": "^4.17.21"
+    "jointjs": "^3.6.3",
+    "lodash": "^4.17.21",
+    "webgme": "latest",
+    "webgme-bindings": "latest",
+    "webgme-cli": "latest"
   }
 }
