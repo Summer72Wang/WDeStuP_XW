@@ -362,7 +362,7 @@ define([
         }
         return _button;
       }
-      return MyVizControl;
+      return VizXWControl;
     });
     
     /* From this line to the end of file, reference: https://github.com/austinjhunt/petrinet-webgme-designstudio/blob/main/petri-net/src/visualizers/panels/SimViz/Util.js */
