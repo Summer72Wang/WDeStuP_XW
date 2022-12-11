@@ -57,20 +57,13 @@ define(['css!./styles/VizXWWidget.css'], function () {
             defaultConnectionPoint: { name: "boundary" },
             cellViewNamespace: namespace,
         });
-
+        // Registering to events can be done with jQuery (as normal)
         self._el.on("dblclick", function (event) {
             event.stopPropagation();
             event.preventDefault();
             self.onBackgroundDblClick();
         });
     };
-
-        // Registering to events can be done with jQuery (as normal)
-        this._el.on('dblclick', function (event) {
-            event.stopPropagation();
-            event.preventDefault();
-            self.onBackgroundDblClick();
-        });
     
 
     VizXWWidget.prototype.onWidgetContainerResize = function (width, height) {
@@ -82,137 +75,137 @@ define(['css!./styles/VizXWWidget.css'], function () {
         // joint.shapes.pn.Place.id => self._webgmePetriNet.places[*].key()
         self._webgmePetriNet.id2place = {};
         for (let _placeId of Object.keys(self._webgmePetriNet.places)) {
-          let place = self._webgmePetriNet.places[_placeId];
-          let vertex = new joint.shapes.pn.Place({
-            position: place.position,
-            size: { width: 80, height: 80 },
-            attrs: {
-              ".label": {
-                text: self._webgmePetriNet.places[_placeId].name,
-                fill: "black",
-              },
-              ".root": {
-                stroke: "black",
-                strokeWidth: 3,
-              },
-              ".marking > circle": {
-                fill: "black",
-              },
-            },
-            marking: place.marking,
-          });
-          self._jointPetriNet.addCell([vertex]);
-          self._webgmePetriNet.places[_placeId].joint = vertex;
-          self._webgmePetriNet.id2place[vertex.id] = _placeId;
+            let place = self._webgmePetriNet.places[_placeId];
+            let vertex = new joint.shapes.pn.Place({
+                position: place.position,
+                size: { width: 80, height: 80 },
+                attrs: {
+                    ".label": {
+                        text: self._webgmePetriNet.places[_placeId].name,
+                        fill: "black",
+                    },
+                    ".root": {
+                        stroke: "black",
+                        strokeWidth: 3,
+                    },
+                    ".marking > circle": {
+                        fill: "black",
+                    },
+                },
+                marking: place.marking,
+            });
+            self._jointPetriNet.addCell([vertex]);
+            self._webgmePetriNet.places[_placeId].joint = vertex;
+            self._webgmePetriNet.id2place[vertex.id] = _placeId;
         }
-      };
+    };
     
     VizXWWidget.prototype.initTransitions = function () {
         let self = this;
         // joint.shapes.pn.Transition.id => self._webgmePetriNet.transitions[*].key()
         self._webgmePetriNet.id2transition = {};
         for (let _transId of Object.keys(self._webgmePetriNet.transitions)) {
-          let transition = self._webgmePetriNet.transitions[_transId];
-          let vertex = new joint.shapes.pn.Transition({
-            name: transition.name,
-            position: transition.position,
-            size: { width: 50, height: 50 },
-            attrs: this.createCSS(transition.name)
-          });
-          vertex.addTo(self._jointPetriNet);
-          // bind the joint shape to the transition in PetriNet model
-          self._webgmePetriNet.transitions[_transId].joint = vertex;
-          self._webgmePetriNet.id2transition[vertex.id] = _transId;
+            let transition = self._webgmePetriNet.transitions[_transId];
+            let vertex = new joint.shapes.pn.Transition({
+                name: transition.name,
+                position: transition.position,
+                size: { width: 50, height: 50 },
+                attrs: this.createCSS(transition.name)
+            });
+            vertex.addTo(self._jointPetriNet);
+            // bind the joint shape to the transition in PetriNet model
+            self._webgmePetriNet.transitions[_transId].joint = vertex;
+            self._webgmePetriNet.id2transition[vertex.id] = _transId;
         }
-      };
+    };
     
     
     VizXWWidget.prototype.turnOnEnabledTrans = function () {
         let self = this;
         let enabledTransitions = [];
         Object.keys(self._webgmePetriNet.transitions).forEach((tid) => {
-          let transition = self._webgmePetriNet.transitions[tid];
-          let fireable = transitionCanBeFired(self, transition.joint);
-          transition.joint.set("enabled", fireable);
-          if (fireable) {
-            enabledTransitions.push(transition);
-          }
+            let transition = self._webgmePetriNet.transitions[tid];
+            let fireable = transitionCanBeFired(self, transition.joint);
+            transition.joint.set("enabled", fireable);
+            if (fireable) {
+                enabledTransitions.push(transition);
+            }
         });
     
         self._webgmePetriNet.setFireableEvents(enabledTransitions);
         if (enabledTransitions.length === 0 && !self.JUST_NOTIFIED_DEADLOCK) {
-          self._client.notifyUser({
-            message: "The network meets a deadlock.",
-            severity: "info",
-          });
-          self.JUST_NOTIFIED_DEADLOCK = true;
-          setTimeout(() => {
-            self.JUST_NOTIFIED_DEADLOCK = false;
-          }, 5000);
+            self._client.notifyUser({
+                message: "The network meets a deadlock.",
+                severity: "info",
+            });
+            self.JUST_NOTIFIED_DEADLOCK = true;
+            setTimeout(() => {
+                self.JUST_NOTIFIED_DEADLOCK = false;
+            }, 5000);
         }
-      };
+    };
     
     VizXWWidget.prototype.initializeArcs = function (arcType) {
         let self = this;
         let _isPlaceToTransArc = (arcType === "PlaceToTransArc");
         let arcsArray = null;
         if (_isPlaceToTransArc) {
-          arcsArray = self._webgmePetriNet.PlaceToTransArc;
+            arcsArray = self._webgmePetriNet.PlaceToTransArc;
         } else {
-          arcsArray = self._webgmePetriNet.TransToPlaceArc;
+            arcsArray = self._webgmePetriNet.TransToPlaceArc;
         }
         arcsArray.forEach((arc) => {
-          let src = null;
-          let dst = null;
-          if (_isPlaceToTransArc) {
-            src = self._webgmePetriNet.places[arc.src];
-            dst = self._webgmePetriNet.transitions[arc.dst];
-          } else {
-            src = self._webgmePetriNet.transitions[arc.src];
-            dst = self._webgmePetriNet.places[arc.dst];
-          }
-          src.jointOutArcs = src.jointOutArcs || {};
-          let link = createLinkSVG(src.joint, dst.joint, arc.name);
-          link.addTo(self._jointPetriNet);
-          src.jointOutArcs[arc.id] = link;
+            let src = null;
+            let dst = null;
+            if (_isPlaceToTransArc) {
+                src = self._webgmePetriNet.places[arc.src];
+                dst = self._webgmePetriNet.transitions[arc.dst];
+            } else {
+                src = self._webgmePetriNet.transitions[arc.src];
+                dst = self._webgmePetriNet.places[arc.dst];
+            }
+        src.jointOutArcs = src.jointOutArcs || {};
+        let link = createLinkSVG(src.joint, dst.joint, arc.name);
+        link.addTo(self._jointPetriNet);
+        src.jointOutArcs[arc.id] = link;
         });
-      };
+    };
     
       // create link between places and transitions
-      let createLinkSVG = (a, b, name) => {
-        return new joint.shapes.standard.Link({
-          source: { id: a.id },
-          target: { id: b.id },
-          attrs: {
-            line: {
-              strokeWidth: 1,
-            },
-            wrapper: {
-              cursor: "default",
-            },
-          },
-          labels: [
-            {
-              position: {
-                distance: 0.5,
-                offset: 0,
-                args: {
-                  keepGradient: true,
-                  ensureLegibility: true,
+        let createLinkSVG = (a, b, name) => {
+            return new joint.shapes.standard.Link({
+                source: { id: a.id },
+                target: { id: b.id },
+                attrs: {
+                    line: {
+                        strokeWidth: 1,
+                    },
+                    wrapper: {
+                        cursor: "default",
+                    },
                 },
-              },
-              attrs: {
-                text: {
-                  text: name,
-                  fontWeight: "bold",
-                },
-              },
-            },
-          ],
-        });
-      };
+                labels: [
+                    {
+                        position: {
+                        distance: 0.5,
+                        offset: 0,
+                        args: {
+                            keepGradient: true,
+                            ensureLegibility: true,
+                        },
+                        },
+                        attrs: {
+                            text: {
+                            text: name,
+                            fontWeight: "bold",
+                            },
+                        },
+                    },
+                ],
+            });
+        };
     
-      // State Machine manipulating functions called from the controller
+    // State Machine manipulating functions called from the controller
     VizXWWidget.prototype.initNet = function (petriNetDescriptor) {
         const self = this;
         self._webgmePetriNet = petriNetDescriptor;
@@ -223,27 +216,27 @@ define(['css!./styles/VizXWWidget.css'], function () {
         self.initializeArcs("TransToPlaceArc");
         self._jointPaper.updateViews();
         self.turnOnEnabledTrans();
-      };
+    };
     
     VizXWWidget.prototype.destroyNet = function () { };
     
-      // if any of the in places has a token number less than 1, transition can not be fired
-      let transitionCanBeFired = (self, t, placesBefore = null) => {
-        if (!placesBefore) {
-          var inbound = self._jointPetriNet.getConnectedLinks(t, {
-            inbound: true,
-          });
-          var placesBefore = inbound.map(function (link) {
-            return link.getSourceElement();
-          });
-        }
+        // if any of the in places has a token number less than 1, transition can not be fired
+        let transitionCanBeFired = (self, t, placesBefore = null) => {
+            if (!placesBefore) {
+                var inbound = self._jointPetriNet.getConnectedLinks(t, {
+                    inbound: true,
+                });
+                var placesBefore = inbound.map(function (link) {
+                    return link.getSourceElement();
+                });
+            }
         for (let _place of placesBefore) {
-          if (_place.get("marking") <= 0) {
-            return false;
-          }
+            if (_place.get("marking") <= 0) {
+                return false;
+            }
         }
         return true;
-      };
+    };
     
     VizXWWidget.prototype.fireEvent = function (transition) {
         let self = this;
