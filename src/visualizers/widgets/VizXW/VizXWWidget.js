@@ -283,7 +283,7 @@ define(['css!./styles/VizXWWidget.css'], function () {
             // token is sent from the source place to the target place
             links.forEach(function (l) {
                 l.findView(self._jointPaper).sendToken(createFlowingToken(), sec * 500);
-            });
+                });
             });
             setTimeout(function () {
                 targetPlaces.forEach(function (p) {
@@ -291,16 +291,16 @@ define(['css!./styles/VizXWWidget.css'], function () {
                         return l.getTargetElement() === p;
                     });
     
-                links.forEach(function (l) {
+                    links.forEach(function (l) {
     
-                    l.findView(self._jointPaper).sendToken(
-                        createFlowingToken(),
-                        sec * 500,
-                        function () {
-                            p.set("marking", p.get("marking") + 1);
-                        }
-                    );
-                });
+                        l.findView(self._jointPaper).sendToken(
+                            createFlowingToken(),
+                            sec * 500,
+                            function () {
+                                p.set("marking", p.get("marking") + 1);
+                            }
+                        );
+                    });
                 });
             }, 500
             );
