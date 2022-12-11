@@ -82,8 +82,8 @@ define([
           self.places.push(_placObj);
         }
   
-        self.PlaceToTransArc = self.getArcs("PlaceToTransArc", nodes);
-        self.TransToPlaceArc = self.getArcs("TransToPlaceArc", nodes);
+        self.PlaceToTransArc = self.getArcs("ArcPlaceToTransition", nodes);
+        self.TransToPlaceArc = self.getArcs("ArcTransitionToPlace", nodes);
         self.place2TransInMap = self.getPlace2TransInMap();
         self.place2TransOutMap = self.getPlace2TransOutMap();
         let isMG = self.isMarkedGraph();
@@ -122,9 +122,8 @@ define([
   
     PetriNetClassifier.prototype.isFreeChoicePetriNet = function () {
       let self = this;
-      // if the intersection of the inplaces sets of two transitions are not empty, then the two transitions should be the same (or in short, each transition has its own unique set if inplaces )
-      // maintain a set of inplaces, traverse all the transitions, when it meets a new inplace, check if it exists in the inplace set, if so, return false
-      // after the traverse, return true
+      //In order for a petri net to be considered free choice, each transition in the net must have its own unique set of inplaces. 
+      //No two separate, distinct transitions should share an in place. If an inplace is shared by any two distinct transitions, the petri net is not free choice.
       let _inplaceSet = [];
       for (let _tran of self.transitions) {
         let _tranId = _tran.id;
@@ -145,7 +144,8 @@ define([
   
     PetriNetClassifier.prototype.isWorkflowNet = function () {
       let self = this;
-      // petri net is a workflow net if it has exactly one source place s where *s = ∅, one sink place o where o* = ∅, and every x ∈ P ∪ T is on a path from s to o
+      // A petri net is a workflow net if it has exactly one source place s where s has no in transitions, 
+      //one sink place o where o has no out transitions, and every place or transition within the net is on a path from s to o.
       let _sourceNum = 0;
       let _sinkNum = 0;
       let _sourceId = "";
@@ -184,7 +184,7 @@ define([
   
     PetriNetClassifier.prototype.isMarkedGraph = function () {
       let self = this;
-      // a petri net is a marked graph if every place has exactly one out transition and one in transition.
+      // A petri net is a marked graph if every place has exactly one out transition and one in transition.
       for (let _place of self.places) {
         let _placeId = _place.id;
         let _intran = 0;
@@ -212,7 +212,7 @@ define([
   
     PetriNetClassifier.prototype.isStateMachine = function () {
       let self = this;
-      // a petri net is a state machine if every transition has exactly one inplace and one outplace .
+      // A petri net is a state machine if every transition has exactly one inplace and one outplace.
       for (let _tran of self.transitions) {
         let _tranId = _tran.id;
         let _inplace = 0;

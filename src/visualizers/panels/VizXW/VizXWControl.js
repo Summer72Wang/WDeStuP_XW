@@ -111,8 +111,8 @@ define([
         const elementIds = petriNetNode.getChildrenIds();
         let placeIds = getPlacesIds(this._client, elementIds);
         let transitionIds = getTransitionsIds(this._client, elementIds);
-        let arcst2pstr = "TransToPlaceArc";
-        let arcsp2tstr = "PlaceToTransArc";
+        let arcst2pstr = "ArcTransitionToPlace";
+        let arcsp2tstr = "ArcPlaceToTransition";
         let arcst2p = getArcs(self._client, arcst2pstr, elementIds);
         let arcsp2t = getArcs(self._client, arcsp2tstr, elementIds);
         let place2TransInMap = getPlace2TransInMap(placeIds, transitionIds, arcst2p);
@@ -132,7 +132,7 @@ define([
         let _place = {
           id: elementId,
           name: _name,
-          marking: _marking,
+          currentMarking: _marking,
           nextPlaceIds: _nextPlaceIds,
           outTransitions: _outTransitions,
           inTransitions: _inTransitions,
@@ -170,8 +170,8 @@ define([
           transitions: {},
           place2TransInMap: _place2TransInMap,
           place2TransOutMap: _place2TransOutMap,
-          PlaceToTransArc: _PlaceToTransArc,
-          TransToPlaceArc: _TransToPlaceArc,
+          ArcPlaceToTransition: _PlaceToTransArc,
+          ArcTransitionToPlace: _TransToPlaceArc,
         };
         return _petriNet;
       }
@@ -182,7 +182,7 @@ define([
           let _name = node.getAttribute("name");
           let _position = node.getRegistry("position");
           if (node.isTypeOf(_META["Place"])) {
-            let _marking = parseInt(node.getAttribute("marking"));
+            let _marking = parseInt(node.getAttribute("currentMarking"));
             let _nextPlaceIds = getPlacesConnectedToPlace(
               elementId,
               _PlaceToTransArc,
@@ -393,7 +393,7 @@ define([
       a: for (transId of _transitions) {
         let _inPlaces = getPlacesTransitionIsFrom(transId, petriNet.place2TransOutMap);
         b: for (IdOfInPlace of _inPlaces) {
-          if (parseInt(petriNet.places[IdOfInPlace].marking) <= 0) {
+          if (parseInt(petriNet.places[IdOfInPlace].currentMarking) <= 0) {
             continue a;
           }
         }
@@ -422,23 +422,23 @@ define([
       return _res;
     }
     
-    let getPlace2TransOutMap = (placeIds, transitionIds, PlaceToTransArc) => {
+    let getPlace2TransOutMap = (placeIds, transitionIds, ArcPlaceToTransition) => {
       let place2TransOutMap = {};
       for (let _place of placeIds) {
         place2TransOutMap[_place] = {};
         for (let _transition of transitionIds) {
-          place2TransOutMap[_place][_transition] = isThereExistsPlaceToTrans(_place, _transition, PlaceToTransArc);
+          place2TransOutMap[_place][_transition] = isThereExistsPlaceToTrans(_place, _transition, ArcPlaceToTransition);
         }
       }
       return place2TransOutMap;
     };
     
-    let getPlace2TransInMap = (placeIds, transitionIds, TransToPlaceArc) => {
+    let getPlace2TransInMap = (placeIds, transitionIds, ArcTransitionToPlace) => {
       let place2TransInMap = {};
       for (let _place of placeIds) {
         place2TransInMap[_place] = {};
         for (let _trans in transitionIds) {
-          place2TransInMap[_place][_trans] = isThereExistsTransToPlace(_place, _trans, TransToPlaceArc);
+          place2TransInMap[_place][_trans] = isThereExistsTransToPlace(_place, _trans, ArcTransitionToPlace);
         }
       }
       return place2TransInMap;
@@ -449,8 +449,8 @@ define([
       return arc.getPointerId(pointerName);
     };
     
-    let isThereExistsPlaceToTrans = (placeId, transitionId, PlaceToTransArc) => {
-      for (let _p2t of PlaceToTransArc) {
+    let isThereExistsPlaceToTrans = (placeId, transitionId, ArcPlaceToTransition) => {
+      for (let _p2t of ArcPlaceToTransition) {
         if (_p2t.src === placeId && _p2t.dst === transitionId) {
           return true;
         }
@@ -459,8 +459,8 @@ define([
     };
     
     //
-    let isThereExistsTransToPlace = (placeId, transitionId, TransToPlaceArc) => {
-      for (let _t2p of TransToPlaceArc) {
+    let isThereExistsTransToPlace = (placeId, transitionId, ArcTransitionToPlace) => {
+      for (let _t2p of ArcTransitionToPlace) {
         if (_t2p.src === transitionId && _t2p.dst === placeId) {
           return true;
         }
@@ -487,16 +487,16 @@ define([
     };
     
     // Find transitions connected to a place, and get the dst places of every transition
-    let getPlacesConnectedToPlace = (placeId, PlaceToTransArc, TransToPlaceArc) => {
+    let getPlacesConnectedToPlace = (placeId, ArcPlaceToTransition, ArcTransitionToPlace) => {
       let nextPlaces = [];
       let _p2tArcs = [];
-      for (let _p2t of PlaceToTransArc) {
+      for (let _p2t of ArcPlaceToTransition) {
         if (_p2t.src == placeId) {
           _p2tArcs.push(_p2t);
         }
       }
       for (let _myp2t of _p2tArcs) {
-        for (let _t2p of TransToPlaceArc) {
+        for (let _t2p of ArcTransitionToPlace) {
           if (_myp2t.dst === _t2p.src) {
             nextPlaces.push(_t2p.dst);
           }
