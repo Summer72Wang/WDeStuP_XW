@@ -126,9 +126,13 @@ In this project, the main task is to implement the visualizer which could conduc
 ![Workflow PetriNet](img/Workflow_PetriNet.png)
 
 ## Simulator
-### Fire Single Transition [satisfied simulator requirement of No.a~f]
+### Fire Single Transition [satisfied simulator requirement of No.i~vi]
 https://user-images.githubusercontent.com/112347330/206939284-480bea55-0b42-48c3-9d42-260583434c79.mov
 
-### Deadlock PetriNet [satisfied simulator requirement of No.g]
+### Deadlock PetriNet [satisfied simulator requirement of No.vii]
 ![State Machine PetriNet](img/StateMachine_PetriNet.png)
 
+# Reference
+https://github.com/kecso/WDeStuP
+https://github.com/austinjhunt/petrinet-webgme-designstudio
+https://github.com/BeneneeYu/petri-net-design-studio
