@@ -133,6 +133,7 @@ https://user-images.githubusercontent.com/112347330/206939284-480bea55-0b42-48c3
 ![State Machine PetriNet](img/StateMachine_PetriNet.png)
 
 # Reference
-https://github.com/kecso/WDeStuP
-https://github.com/austinjhunt/petrinet-webgme-designstudio
-https://github.com/BeneneeYu/petri-net-design-studio
+
+- Environment Initialization: https://github.com/kecso/WDeStuP.
+- Develop Streamline and PetriNet Meta Model: https://github.com/austinjhunt/petrinet-webgme-designstudio.
+- Visualizer and Plugin Functions: https://github.com/BeneneeYu/petri-net-design-studio.
