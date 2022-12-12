@@ -97,3 +97,12 @@ Finally, folder `plugins` will be added under `./src` automatically, which conta
 - exit container.
 - copy webgme-setup.json: `docker-compose cp webgme:/usr/app/webgme-setup.json webgme-setup.json`.
 - copy webgme-config: `docker-compose cp webgme:/usr/app/config/config.webgme.js config/config.webgme.js`.
+
+## Decoration
+Use the SVG decoration. Places are circles and Transitions are blue bars.
+
+# PetriNet Use Case
+The assignment description is in the [Miniproject.pdf file].
+
+## Visualizer - fire single transition
+https://user-images.githubusercontent.com/112347330/206939284-480bea55-0b42-48c3-9d42-260583434c79.mov
