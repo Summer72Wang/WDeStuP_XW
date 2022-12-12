@@ -105,18 +105,18 @@ Use the SVG decoration. Places are circles and Transitions are blue bars.
 The PetriNet mini project assignment description is in the document [Miniproject.pdf]. Petri nets are specific types of modeling constructs useful in data analysis, simulations, business process modeling and other scenarios. This type of mathematical construct can help to plan workflows or present data on complicated systems.
 In this project, the main task is to implement the visualizer which could conduct the PetriNet classification plugin and the specific simulator.
 - For PetriNet classification plugin (PetriNetClassifier), embedded in the VizXW visualization environment, it needs to show the PetriNet type for the specific PetriNet instance. There are 4 PetriNet types:
-    - Free Choice PetriNet: if the intersection of the inplaces sets of two transitions are not empty, then the two transitions should be the same (or in short, each transition has its own unique set if inplaces).
-    - State Machine PetriNet: a PetriNet is a state machine if every transition has exactly one inplace and one outplace.
-    - Marked Graph PetriNet: a PetriNet is a marked graph if every place has exactly one out transition and one in transition.
-    - Workflow PetriNet: a PetriNet is a workflow net if it has exactly one source place s where s^* = ∅, one sink place o where o^* = ∅, and every x ∈ P ∪ T is on a path from s to o.
+    1. Free Choice PetriNet: if the intersection of the inplaces sets of two transitions are not empty, then the two transitions should be the same (or in short, each transition has its own unique set if inplaces).
+    2. State Machine PetriNet: a PetriNet is a state machine if every transition has exactly one inplace and one outplace.
+    3. Marked Graph PetriNet: a PetriNet is a marked graph if every place has exactly one out transition and one in transition.
+    4. Workflow PetriNet: a PetriNet is a workflow net if it has exactly one source place s where s^* = ∅, one sink place o where o^* = ∅, and every x ∈ P ∪ T is on a path from s to o.
 - For the simulator, it should:
-    - 1. visualize the network similarly to the composition.
-    - 2. differentiate the transitions that are enabled.
-    - 3. Firing should happen once the user clicks on an enabled transition.
-    - 4. Markings should progress according to firings.
-    - 5. The visualizer should have a ‘reset’ button on its toolbar that switches the network back to the initial marking.
-    - 6. The state of the simulation should not be reflected in the model.
-    - 7. If the network reaches a deadlock (there is no enabled transition), some visual effect should notify the user.
+    1. visualize the network similarly to the composition.
+    2. differentiate the transitions that are enabled.
+    3. Firing should happen once the user clicks on an enabled transition.
+    4. Markings should progress according to firings.
+    5. The visualizer should have a ‘reset’ button on its toolbar that switches the network back to the initial marking.
+    6. The state of the simulation should not be reflected in the model.
+    7. If the network reaches a deadlock (there is no enabled transition), some visual effect should notify the user.
 
 ## PetriNet classification
 ### State Machine PetriNet
@@ -126,9 +126,9 @@ In this project, the main task is to implement the visualizer which could conduc
 ![Workflow PetriNet](img/Workflow_PetriNet.png)
 
 ## Simulator
-### Fire Single Transition [satisfied simulator requirement of No.1~6]
+### Fire Single Transition [satisfied simulator requirement of No.a~f]
 https://user-images.githubusercontent.com/112347330/206939284-480bea55-0b42-48c3-9d42-260583434c79.mov
 
-### Deadlock PetriNet [satisfied simulator requirement of No.7]
+### Deadlock PetriNet [satisfied simulator requirement of No.g]
 ![State Machine PetriNet](img/StateMachine_PetriNet.png)
 
